@@ -1,0 +1,111 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Chat Room</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+
+<body>
+	<div class="container text-center">
+		<div class="row align-items-start">
+			<div class="col"></div>
+			<div class="col">
+				<form method="POST" enctype="multipart/form-data" id="fileUploadForm">
+					<div class="mb-3">
+						<label for="exampleFormControlTextarea1" class="form-label">Sender Number</label>
+						<input type="text" name="senderNumber" class="form-control" id="senderNum" rows="3"></input>
+					</div>
+					<div class="mb-3">
+						<label for="exampleFormControlTextarea1" class="form-label">Recepient Number</label>
+						<input type="text" name="recepientNumber" class="form-control" id="recepientNum"
+							rows="3"></input>
+					</div>
+
+					<div class="mb-3">
+						<label for="exampleFormControlTextarea1" class="form-label">Send Message</label>
+						<input type="text" name="message" class="form-control" id="message" rows="3"></input>
+					</div>
+
+					<div class="mb-3">
+						<label for="exampleFormControlTextarea1" class="form-label">Upload File</label>
+						<input type="file" name="file" class="form-control" id="file" rows="3"></input>
+					</div>
+					<div class="mb-3">
+						<button class="btn btnSubmit btn-outline-primary" type="submit" id="button-addon1">Send</button>
+					</div>
+				</form>
+
+				<script>
+					/////Loading messageage on page load
+					$(document).ready(function () {
+						$.get("/readMessage", function (data, status) {
+							$("#messagesBox").html(data).show();//.fadeOut(1000);
+						});
+
+
+						$(".btnSubmit").on("click", function (event) {
+
+							//stop submit the form, we will post it manually.
+							event.preventDefault();
+							var form = $('#fileUploadForm')[0];
+							console.log('Form', form);
+
+							// Create an FormData object 
+							var data = new FormData(form);
+
+							// If you want to add an extra field for the FormData
+							data.append("key", "1234");
+							console.log('Data', data);
+							// disabled the submit button
+							$("#button-addon1").prop("disabled", true);
+
+							$.ajax({
+								url: "/sendMessage",
+								data: data,
+								processData: false,  // Important!
+								cache: false,
+								type: "POST",
+								contentType: false,
+								dataType: "json",
+								success: function () {
+									console.log("Message sent successfully.")
+									$.get("/readMessage", function (data, status) {
+										$("#messagesBox").html(data).show();//.fadeOut(1000);
+									});
+									$("#button-addon1").prop("disabled", false);
+								},
+								error: function (e) {
+									console.log("ERROR : ", e);
+									$("#button-addon1").prop("disabled", false);
+								}
+							});
+						});
+					});
+				</script>
+			</div>
+			<div class="col"></div>
+		</div>
+	</div>
+
+	<center>
+
+		-------------------------------------------------------------------------------------------------------------------
+	</center>
+	<div class="container text-center">
+		<div class="row align-items-start">
+			<!--<div class="col">
+				<center>Your Message</center>
+			</div>-->
+			<div id="messagesBox" class="col"></div>
+			<!--<div class="col">
+				<center>Friend's Message</center>
+			</div>-->
+		</div>
+	</div>
+</body>
+
+</html>
