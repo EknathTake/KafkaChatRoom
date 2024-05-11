@@ -14,6 +14,9 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import com.example.demo.model.Message;
 
+/**
+ * @author eknathtake
+ */
 @Configuration
 public class KafkaProducerConfig {
 

@@ -45,46 +45,54 @@
 						$.get("/readMessage", function (data, status) {
 							$("#messagesBox").html(data).show();//.fadeOut(1000);
 						});
+					});
 
+					$("#button-addon1").on("click", function (event) {
 
-						$(".btnSubmit").on("click", function (event) {
+						//stop submit the form, we will post it manually.
+						event.preventDefault();
 
-							//stop submit the form, we will post it manually.
-							event.preventDefault();
-							var form = $('#fileUploadForm')[0];
-							console.log('Form', form);
+						var senderNum = $('#senderNum').val();
+						var rcpntNum = $('#recepientNum').val();
+						var message = $('#message').val();
+						var file = $('#file').val();
 
-							// Create an FormData object 
-							var data = new FormData(form);
+						var data = {
+							kafkaKey: '1234',
+							senderNumber: senderNum,
+							recepientNumber: rcpntNum,
+							message: message,
+							file: file
+						}
 
-							// If you want to add an extra field for the FormData
-							data.append("key", "1234");
-							console.log('Data', data);
-							// disabled the submit button
-							$("#button-addon1").prop("disabled", true);
+						// If you want to add an extra field for the FormData
+						console.log('Data', data);
+						// disabled the submit button
+						$("#button-addon1").prop("disabled", true);
 
-							$.ajax({
-								url: "/sendMessage",
-								data: data,
-								processData: false,  // Important!
-								cache: false,
-								type: "POST",
-								contentType: false,
-								dataType: "json",
-								success: function () {
-									console.log("Message sent successfully.")
-									$.get("/readMessage", function (data, status) {
-										$("#messagesBox").html(data).show();//.fadeOut(1000);
-									});
-									$("#button-addon1").prop("disabled", false);
-								},
-								error: function (e) {
-									console.log("ERROR : ", e);
-									$("#button-addon1").prop("disabled", false);
-								}
-							});
+						$.ajax({
+							url: "/sendMessage",
+							data: data,
+							processData: false,  // Important!
+							cache: false,
+							type: "POST",
+							enctype: 'multipart/form-data',
+							contentType: 'multipart/form-data',
+							//dataType: "json",
+							success: function () {
+								console.log("Message sent successfully.")
+								$.get("/readMessage", function (data, status) {
+									$("#messagesBox").html(data).show();//.fadeOut(1000);
+								});
+								$("#button-addon1").prop("disabled", false);
+							},
+							error: function (e) {
+								console.log("ERROR : ", e);
+								$("#button-addon1").prop("disabled", false);
+							}
 						});
 					});
+
 				</script>
 			</div>
 			<div class="col"></div>
