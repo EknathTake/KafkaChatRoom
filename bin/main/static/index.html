@@ -52,19 +52,6 @@
 						//stop submit the form, we will post it manually.
 						event.preventDefault();
 
-						var senderNum = $('#senderNum').val();
-						var rcpntNum = $('#recepientNum').val();
-						var message = $('#message').val();
-						var file = $('#file').val();
-
-						var data = {
-							kafkaKey: '1234',
-							senderNumber: senderNum,
-							recepientNumber: rcpntNum,
-							message: message,
-							file: file
-						}
-
 						// If you want to add an extra field for the FormData
 						console.log('Data', data);
 						// disabled the submit button
@@ -72,13 +59,13 @@
 
 						$.ajax({
 							url: "/sendMessage",
-							data: data,
-							processData: false,  // Important!
-							cache: false,
+							data: new FormData($("#fileUploadForm")[0]),
 							type: "POST",
 							enctype: 'multipart/form-data',
-							contentType: 'multipart/form-data',
-							//dataType: "json",
+							processData: false, // tell jQuery not to process the data
+							contentType: false, // tell jQuery not to set contentType
+							cache: false,
+
 							success: function () {
 								console.log("Message sent successfully.")
 								$.get("/readMessage", function (data, status) {

@@ -1,0 +1,30 @@
+Kafka with ZooKeeper
+Run the following commands in order to start all services in the correct order:
+
+1. START ZOOKEEPER SERVICE
+$ bin/zookeeper-server-start.sh config/zookeeper.properties
+Open another terminal session and run:
+
+2. START KAFKA BROKER SERVICE
+$ bin/kafka-server-start.sh config/server.properties
+
+
+3. CREATE A TOPIC TO STORE YOUR EVENTS
+$ bin/kafka-topics.sh --create --topic quickstart-events --bootstrap-server localhost:9092
+
+
+4. CHECK KAFKA PARTITION DETAILS
+$ bin/kafka-topics.sh --describe --topic quickstart-events --bootstrap-server localhost:9092
+Topic: quickstart-events        TopicId: NPmZHyhbR9y00wMglMH2sg PartitionCount: 1       ReplicationFactor: 1	Configs:
+    Topic: quickstart-events Partition: 0    Leader: 0   Replicas: 0 Isr: 0
+
+
+5. WRITE SOME EVENTS INTO THE TOPIC
+$ bin/kafka-console-producer.sh --topic quickstart-events --bootstrap-server localhost:9092
+This is my first event
+This is my second event
+
+6. READ THE EVENTS
+$ bin/kafka-console-consumer.sh --topic quickstart-events --from-beginning --bootstrap-server localhost:9092
+This is my first event
+This is my second event
